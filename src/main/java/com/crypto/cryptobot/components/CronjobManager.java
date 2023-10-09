@@ -46,7 +46,6 @@ public class CronjobManager {
             List<CurrencyDTO> fromDB = new ArrayList<>();
             repository.findAll().forEach(fromDB::add);
 
-            log.info("let's start here");
             for (int i = 0; i < fromDB.size(); i++) {
                 CurrencyDTO oldDTO = fromDB.get(i);
                 String symbol = fromDB.get(i).getSymbol();
@@ -54,6 +53,7 @@ public class CronjobManager {
 
                 if (isChanged(oldDTO, newDTO)) {
                     resultList.add(newDTO);
+                    log.info("{} -- {}", oldDTO.getPrice(), newDTO.getPrice());
                     log.info("{}", newDTO);
                 }
 
