@@ -98,14 +98,14 @@ public class ResponseHandler {
         } else if ("interrupt monitoring".equalsIgnoreCase(message.getText())) {
             currencyService.stopMonitoring();
         } else {
-            sendMessage.setText("We don't sell " + message.getText() + ". Please select from the options below.");
+            sendMessage.setText("We don't offer " + message.getText() + ". Please select from the options in box.");
             sendMessage.setReplyMarkup(KeyboardFactory.getPizzaOrDrinkKeyboard());
             sender.execute(sendMessage);
         }
     }
 
     private void replyToName(long chatId, Message message) {
-        promptWithKeyboardForState(chatId, "Hello " + message.getText() + ". What would you like to have?", KeyboardFactory.getPizzaOrDrinkKeyboard(), UserState.IN_MONITORING);
+        promptWithKeyboardForState(chatId, "Hello " + message.getText() + ". What would you like to do?", KeyboardFactory.getPizzaOrDrinkKeyboard(), UserState.IN_MONITORING);
     }
 
     public boolean userIsActive(Long chatId) {
