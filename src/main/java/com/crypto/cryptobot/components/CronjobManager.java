@@ -28,9 +28,12 @@ public class CronjobManager {
 
     private final CurrencyRepository repository;
 
-    public CronjobManager(CurrencyRepository repository, CurrencyConvertor convertor) {
+//    private final ResponseHandler responseHandler;
+
+    public CronjobManager(CurrencyRepository repository, CurrencyConvertor convertor /*, ResponseHandler responseHandler*/) {
         this.repository = repository;
         this.convertor = convertor;
+//        this.responseHandler = responseHandler;
     }
 
     @Scheduled(cron = "${request.frequancy.cron}")
@@ -58,6 +61,9 @@ public class CronjobManager {
                 }
 
             }
+
+            //output data to user
+//            responseHandler.sendDataResults(resultList);
 
             repository.deleteAll();
             repository.saveAll(dtos);

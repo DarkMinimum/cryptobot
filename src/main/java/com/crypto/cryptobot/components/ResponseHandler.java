@@ -1,5 +1,6 @@
 package com.crypto.cryptobot.components;
 
+import com.crypto.cryptobot.dto.CurrencyDTO;
 import com.crypto.cryptobot.service.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.abilitybots.api.db.DBContext;
@@ -30,6 +31,22 @@ public class ResponseHandler {
         this.currencyService = currencyService;
         this.activeUsers = new ArrayList<>();
     }
+
+//    public void sendDataResults(List<CurrencyDTO> list) {
+//        SendMessage message = new SendMessage();
+//        StringBuilder stringBuilder = new StringBuilder();
+//        list.forEach(dto -> {
+//            stringBuilder.append("Changed: " + dto.toString());
+//        });
+//
+//        message.setText(stringBuilder.toString());
+//
+//        activeUsers.forEach(id -> {
+//            message.setChatId(id);
+//            sender.execute(message);
+//        });
+//
+//    }
 
     public void replyToStart(long chatId) {
         log.info("User with ID: {} just logged in", chatId);
