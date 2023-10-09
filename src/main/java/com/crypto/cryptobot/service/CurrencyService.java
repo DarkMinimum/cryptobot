@@ -1,5 +1,7 @@
 package com.crypto.cryptobot.service;
 
+import com.crypto.cryptobot.dto.Currency;
+
 import java.util.List;
 
 public interface CurrencyService {
@@ -10,7 +12,7 @@ public interface CurrencyService {
      * @param currency
      * @return saved entry
      */
-    Currency save(Currency currency);
+    void save(Currency currency);
 
     /**
      * Save batch of currencies

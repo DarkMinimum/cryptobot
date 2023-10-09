@@ -1,5 +1,6 @@
 package com.crypto.cryptobot.service.impl;
 
+import com.crypto.cryptobot.components.CurrencyConvertor;
 import com.crypto.cryptobot.dto.Currency;
 import com.crypto.cryptobot.dto.CurrencyDTO;
 import com.crypto.cryptobot.repository.CurrencyRepository;
@@ -11,33 +12,51 @@ import okhttp3.Response;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 public class DefaultCurrencyService implements CurrencyService {
 
-    private final Curr9098encyRepository repository;
-    private final
+    private final CurrencyRepository repository;
+    private final CurrencyConvertor convertor;
 
 
-    public DefaultCurrencyService(CurrencyRepository repository) {
+    public DefaultCurrencyService(CurrencyRepository repository, CurrencyConvertor convertor) {
         this.repository = repository;
+        this.convertor = convertor;
     }
 
     @Override
-    public Currency save(Currency currency) {
-        return repository.save(currency);
+    public void save(Currency currency) {
+        CurrencyDTO dto = new CurrencyDTO();
+        convertor.toDTO(currency, dto);
+        repository.save(dto);
     }
 
     @Override
     public void saveAll(List<Currency> currency) {
-        repository.saveAll(currency);
+        List<CurrencyDTO> dtos = new ArrayList<>();
+        currency.forEach(c -> {
+            var target = new CurrencyDTO();
+            convertor.toDTO(c, target);
+            dtos.add(target);
+        });
+        repository.saveAll(dtos);
     }
 
     @Override
     public Iterable<Currency> getAll() {
-        return repository.findAll();
+        Iterable<CurrencyDTO> dtos = repository.findAll();
+        List<Currency> currencies = new ArrayList<>();
+        dtos.forEach(d -> {
+            var target = new Currency();
+            convertor.fromDTO(d, target);
+            currencies.add(target);
+        });
+
+        return currencies;
     }
 
     @Override
@@ -53,8 +72,6 @@ public class DefaultCurrencyService implements CurrencyService {
                 final String body = (response.body().string());
                 ObjectMapper mapper = new ObjectMapper();
                 List<Currency> currencies = mapper.readValue(body, mapper.getTypeFactory().constructCollectionType(List.class, Currency.class));
-                List<CurrencyDTO> currencyDTOS =
-                
                 this.saveAll(currencies);
                 this.getAll().forEach(System.out::println);
             } else {
@@ -62,13 +79,6 @@ public class DefaultCurrencyService implements CurrencyService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-    
-    private List<Currency> validatePrice(List<Currency> currencies) {
-        for (:
-             ) {
-
         }
     }
 }
