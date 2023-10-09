@@ -9,10 +9,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @SpringBootApplication
-public class CryptobotApplication {
+public class CryptoBotApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(CryptobotApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(CryptoBotApplication.class, args);
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(ctx.getBean("cryptoBot", AbilityBot.class));

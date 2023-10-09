@@ -1,6 +1,7 @@
 package com.crypto.cryptobot.components;
 
 import com.crypto.cryptobot.service.CurrencyService;
+import lombok.Value;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,9 +9,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ResponseHandler {
+
+    //TODO: to props file
+    private int MAX_USERS = 1;
+    private List<Long> activeUsers;
 
     private final SilentSender sender;
     private final Map<Long, UserState> chatStates;
@@ -21,14 +28,28 @@ public class ResponseHandler {
         this.sender = sender;
         chatStates = db.getMap(Constants.CHAT_STATES);
         this.currencyService = currencyService;
+        this.activeUsers = new ArrayList<>();
     }
 
     public void replyToStart(long chatId) {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText(Constants.START_TEXT);
-        sender.execute(message);
-        chatStates.put(chatId, UserState.AWAITING_NAME);
+        if (!activeUsers.contains(chatId)) {
+            activeUsers.add(chatId);
+        }
+
+        if (activeUsers.size() < MAX_USERS) {
+            SendMessage message = new SendMessage();
+            message.setChatId(chatId);
+            message.setText(Constants.START_TEXT);
+            sender.execute(message);
+            chatStates.put(chatId, UserState.AWAITING_NAME);
+        } else {
+            SendMessage message = new SendMessage();
+            message.setChatId(chatId);
+            message.setText("The bot is working with other users, please try later");
+            sender.execute(message);
+            chatStates.put(chatId, UserState.AWAITING_NAME);
+        }
+
     }
 
     public void replyToButtons(long chatId, Message message) {
