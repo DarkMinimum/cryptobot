@@ -1,6 +1,7 @@
 package com.crypto.cryptobot.service.impl;
 
 import com.crypto.cryptobot.components.CurrencyConvertor;
+import com.crypto.cryptobot.components.CronjobManager;
 import com.crypto.cryptobot.dto.Currency;
 import com.crypto.cryptobot.dto.CurrencyDTO;
 import com.crypto.cryptobot.repository.CurrencyRepository;
@@ -22,10 +23,13 @@ public class DefaultCurrencyService implements CurrencyService {
     private final CurrencyRepository repository;
     private final CurrencyConvertor convertor;
 
+    private final CronjobManager cronjobManager;
 
-    public DefaultCurrencyService(CurrencyRepository repository, CurrencyConvertor convertor) {
+
+    public DefaultCurrencyService(CurrencyRepository repository, CurrencyConvertor convertor, CronjobManager cronjobManager) {
         this.repository = repository;
         this.convertor = convertor;
+        this.cronjobManager = cronjobManager;
     }
 
     @Override
@@ -59,6 +63,22 @@ public class DefaultCurrencyService implements CurrencyService {
         return currencies;
     }
 
+    //start proc
+
+    //get data
+    //persist data
+    //{
+
+    //some time ago
+
+    //get data
+
+        //compare data
+        //gather that was changed
+    //persist data
+    //}
+
+
     @Override
     public void doGet() {
         OkHttpClient client = new OkHttpClient();
@@ -77,6 +97,9 @@ public class DefaultCurrencyService implements CurrencyService {
             } else {
                 System.out.println("Request failed with code: " + response.code());
             }
+
+            cronjobManager.startJob();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

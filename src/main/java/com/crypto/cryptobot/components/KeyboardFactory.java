@@ -7,25 +7,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.List;
 
 public class KeyboardFactory {
-    public static ReplyKeyboard getPizzaToppingsKeyboard() {
-        KeyboardRow row = new KeyboardRow();
-        row.add("Margherita");
-        row.add("Pepperoni");
-        return new ReplyKeyboardMarkup(List.of(row));
-    }
-
     public static ReplyKeyboard getPizzaOrDrinkKeyboard(){
         KeyboardRow row = new KeyboardRow();
-        row.add("Pizza");
-        row.add("Drink");
-        row.add("Request");
-        return new ReplyKeyboardMarkup(List.of(row));
-    }
-
-    public static ReplyKeyboard getYesOrNo() {
-        KeyboardRow row = new KeyboardRow();
-        row.add("Yes");
-        row.add("No");
+        row.add("Interupt monitoring");
+        row.add("Start monitoring");
         return new ReplyKeyboardMarkup(List.of(row));
     }
 }
