@@ -77,7 +77,6 @@ public class DefaultCurrencyService implements CurrencyService {
                 ObjectMapper mapper = new ObjectMapper();
                 List<Currency> currencies = mapper.readValue(body, mapper.getTypeFactory().constructCollectionType(List.class, Currency.class));
                 this.saveAll(currencies);
-                this.getAll().forEach(System.out::println);
             } else {
                 System.out.println("Request failed with code: " + response.code());
             }
@@ -93,19 +92,4 @@ public class DefaultCurrencyService implements CurrencyService {
     public void stopMonitoring() {
         cronjobManager.stopJob();
     }
-
-    //start proc
-
-    //get data
-    //persist data
-    //{
-
-    //some time ago
-
-    //get data
-
-        //compare data
-        //gather that was changed
-    //persist data
-    //}
 }

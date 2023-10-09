@@ -1,6 +1,7 @@
 package com.crypto.cryptobot.components;
 
 import com.crypto.cryptobot.service.CurrencyService;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ResponseHandler {
 
     private final int MAX_USERS = 5;
@@ -30,9 +32,7 @@ public class ResponseHandler {
     }
 
     public void replyToStart(long chatId) {
-        System.out.println(chatId);
-        System.out.println(activeUsers);
-
+        log.info("User with ID: {} just logged in", chatId);
         if (!activeUsers.contains(chatId)) {
             activeUsers.add(chatId);
         }
@@ -55,11 +55,12 @@ public class ResponseHandler {
     public void replyToButtons(long chatId, Message message) {
         if (message.getText().equalsIgnoreCase("/stop")) {
             stopChat(chatId);
+            log.info("User with ID: {} just logged off", chatId);
         }
 
         switch (chatStates.get(chatId)) {
             case AWAITING_NAME -> replyToName(chatId, message);
-            case FOOD_DRINK_SELECTION -> replyToFoodDrinkSelection(chatId, message);
+            case IN_MONITORING -> replayToMonitoring(chatId, message);
             default -> unexpectedMessage(chatId);
         }
     }
@@ -67,14 +68,14 @@ public class ResponseHandler {
     private void unexpectedMessage(long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText("I did not expect that.");
+        sendMessage.setText("This message is unexpected");
         sender.execute(sendMessage);
     }
 
     private void stopChat(long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText("Thank you for your order. See you soon!\nPress /start to order again");
+        sendMessage.setText("The session ended");
         chatStates.remove(chatId);
         sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
         sender.execute(sendMessage);
@@ -89,7 +90,7 @@ public class ResponseHandler {
         chatStates.put(chatId, awaitingReorder);
     }
 
-    private void replyToFoodDrinkSelection(long chatId, Message message) {
+    private void replayToMonitoring(long chatId, Message message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         if ("start monitoring".equalsIgnoreCase(message.getText())) {
@@ -104,7 +105,7 @@ public class ResponseHandler {
     }
 
     private void replyToName(long chatId, Message message) {
-        promptWithKeyboardForState(chatId, "Hello " + message.getText() + ". What would you like to have?", KeyboardFactory.getPizzaOrDrinkKeyboard(), UserState.FOOD_DRINK_SELECTION);
+        promptWithKeyboardForState(chatId, "Hello " + message.getText() + ". What would you like to have?", KeyboardFactory.getPizzaOrDrinkKeyboard(), UserState.IN_MONITORING);
     }
 
     public boolean userIsActive(Long chatId) {
