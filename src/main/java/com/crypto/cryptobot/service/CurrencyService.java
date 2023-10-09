@@ -28,6 +28,14 @@ public interface CurrencyService {
      */
     Iterable<Currency> getAll();
 
-    void doGet();
+    /**
+     * Initiates monitoring process
+     */
+    void startMonitoring();
+
+    /**
+     * Stops monitoring process
+     */
+    void stopMonitoring();
 
 }

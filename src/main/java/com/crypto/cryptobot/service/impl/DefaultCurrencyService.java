@@ -63,24 +63,8 @@ public class DefaultCurrencyService implements CurrencyService {
         return currencies;
     }
 
-    //start proc
-
-    //get data
-    //persist data
-    //{
-
-    //some time ago
-
-    //get data
-
-        //compare data
-        //gather that was changed
-    //persist data
-    //}
-
-
     @Override
-    public void doGet() {
+    public void startMonitoring() {
         OkHttpClient client = new OkHttpClient();
 
         // Create a request object
@@ -104,4 +88,24 @@ public class DefaultCurrencyService implements CurrencyService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void stopMonitoring() {
+        cronjobManager.stopJob();
+    }
+
+    //start proc
+
+    //get data
+    //persist data
+    //{
+
+    //some time ago
+
+    //get data
+
+        //compare data
+        //gather that was changed
+    //persist data
+    //}
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class ResponseHandler {
 
-    private final int MAX_USERS = 1;
+    private final int MAX_USERS = 5;
     private final List<Long> activeUsers;
 
     private final SilentSender sender;
@@ -30,6 +30,9 @@ public class ResponseHandler {
     }
 
     public void replyToStart(long chatId) {
+        System.out.println(chatId);
+        System.out.println(activeUsers);
+
         if (!activeUsers.contains(chatId)) {
             activeUsers.add(chatId);
         }
@@ -45,7 +48,6 @@ public class ResponseHandler {
             message.setChatId(chatId);
             message.setText("The bot is working with other users, please try later");
             sender.execute(message);
-            chatStates.put(chatId, UserState.AWAITING_NAME);
         }
 
     }
@@ -90,8 +92,10 @@ public class ResponseHandler {
     private void replyToFoodDrinkSelection(long chatId, Message message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        if ("request".equalsIgnoreCase(message.getText())) {
-            currencyService.doGet();
+        if ("start monitoring".equalsIgnoreCase(message.getText())) {
+            currencyService.startMonitoring();
+        } else if ("interrupt monitoring".equalsIgnoreCase(message.getText())) {
+            currencyService.stopMonitoring();
         } else {
             sendMessage.setText("We don't sell " + message.getText() + ". Please select from the options below.");
             sendMessage.setReplyMarkup(KeyboardFactory.getPizzaOrDrinkKeyboard());
